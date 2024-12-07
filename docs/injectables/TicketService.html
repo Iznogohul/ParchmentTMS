@@ -192,7 +192,7 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/ticket/ticket.service.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/ticket/ticket.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -270,8 +270,8 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="32"
-                                    class="link-to-prism">src/ticket/ticket.service.ts:32</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/ticket/ticket.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -370,8 +370,8 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="136"
-                                    class="link-to-prism">src/ticket/ticket.service.ts:136</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">src/ticket/ticket.service.ts:146</a></div>
                         </td>
                     </tr>
 
@@ -470,8 +470,8 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">src/ticket/ticket.service.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">src/ticket/ticket.service.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -552,8 +552,8 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="77"
-                                    class="link-to-prism">src/ticket/ticket.service.ts:77</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/ticket/ticket.service.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -652,8 +652,8 @@ Provides methods for creating, updating, retrieving, and deleting tickets.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">src/ticket/ticket.service.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/ticket/ticket.service.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -746,6 +746,7 @@ import { ProjectDoesNotExist, ProjectIdValidationError } from &quot;@/project/pr
 import { plainToClass } from &quot;class-transformer&quot;;
 import { TicketDoesNotExist, TicketError, TicketIdValidationError, TicketInsufficientPermissionsError, TicketNotModifiedError } from &quot;./ticket.errors&quot;;
 import { hasChanges, isMongoDbIdValid } from &quot;@/utils&quot;;
+import { sanitizeUpdateTicketDto } from &quot;./utils/ticket.utils&quot;;
 
 /**
  * Service class for managing ticket-related operations within projects.
@@ -765,8 +766,12 @@ export class TicketService {
    * @param {mongoose.Types.ObjectId} userId - The ID of the user creating the ticket.
    * @returns {Promise&lt;Ticket&gt;} - The created ticket object.
    * @throws {ProjectDoesNotExist} - Throws if the project with the provided ID doesn&#x27;t exist.
+   * @throws {ProjectIdValidationError} - Throws if the provided project ID is invalid.
    */
   public async create(createTicketDto: CreateTicketDto, userId: mongoose.Types.ObjectId): Promise&lt;Ticket&gt; {
+    if (!isMongoDbIdValid(createTicketDto.projectId)) {
+      throw new ProjectIdValidationError(&#x60;Invalid project id: \&quot;${createTicketDto.projectId}\&quot;&#x60;);
+    }
     const project &#x3D; await this.projectModel.findById(createTicketDto.projectId).exec();
     if (!project) {
       throw new ProjectDoesNotExist(&#x60;Project with id \&quot;${createTicketDto.projectId}\&quot; doesn&#x27;t exist.&#x60;);
@@ -849,11 +854,16 @@ export class TicketService {
     if (!hasChanges(ticket, updateTicketDto)) {
       throw new TicketNotModifiedError(&quot;No changes detected&quot;);
     }
+    const sanitizedUpdate &#x3D; sanitizeUpdateTicketDto(updateTicketDto);
     const updatedTicket &#x3D; await this.ticketModel
-      .findByIdAndUpdate(ticketId, updateTicketDto, {
-        new: true,
-        runValidators: true,
-      })
+      .findByIdAndUpdate(
+        ticketId,
+        { $set: sanitizedUpdate },
+        {
+          new: true,
+          runValidators: true,
+        },
+      )
       .select(&quot;-__v&quot;)
       .exec();
     return updatedTicket;

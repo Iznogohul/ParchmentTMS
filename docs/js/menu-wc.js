@@ -265,6 +265,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ProjectSlugValidationError.html" data-type="entity-link" >ProjectSlugValidationError</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ProjectUpdateDataValidationError.html" data-type="entity-link" >ProjectUpdateDataValidationError</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/RegisterUserDto.html" data-type="entity-link" >RegisterUserDto</a>
                             </li>
                             <li class="link">

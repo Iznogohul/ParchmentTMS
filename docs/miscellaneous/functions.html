@@ -130,6 +130,9 @@
                         <li>
                             <a href="#isMongoDbIdValid" title="src/utils/index.ts" ><b>isMongoDbIdValid</b>&nbsp;&nbsp;&nbsp;(src/.../index.ts)</a>
                         </li>
+                        <li>
+                            <a href="#sanitizeUpdateTicketDto" title="src/ticket/utils/ticket.utils.ts" ><b>sanitizeUpdateTicketDto</b>&nbsp;&nbsp;&nbsp;(src/.../ticket.utils.ts)</a>
+                        </li>
                     </ul>
                 </td>
             </tr>
@@ -441,7 +444,7 @@ determine if there are any differences. It handles arrays, <code>Date</code> obj
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isMongoDbIdValid(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>isMongoDbIdValid(id)</code>
                 </td>
             </tr>
 
@@ -463,7 +466,6 @@ strings that are unique identifiers for documents in MongoDB collections.</p>
                                     <thead>
                                         <tr>
                                             <td>Name</td>
-                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Description</td>
                                         </tr>
@@ -471,9 +473,6 @@ strings that are unique identifiers for documents in MongoDB collections.</p>
                                     <tbody>
                                         <tr>
                                                 <td>id</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
 
                                             <td>
                                                     No
@@ -565,6 +564,81 @@ This is useful for scenarios where one of the two fields is required for user lo
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/ticket/utils/ticket.utils.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sanitizeUpdateTicketDto"></a>
+                    <span class="name">
+                        <span ><b>sanitizeUpdateTicketDto</b></span>
+                        <a href="#sanitizeUpdateTicketDto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>sanitizeUpdateTicketDto(updateTicketDto: <a href="../classes/UpdateTicketDto.html" target="_self">UpdateTicketDto</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Sanitizes the updateTicketDto object to ensure it only contains allowed fields and values.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>updateTicketDto</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateTicketDto.html" target="_self" >UpdateTicketDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>The data to update the ticket with.</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Partial&lt;UpdateTicketDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>The sanitized update data.</li>
+</ul>
+
                             </div>
                 </td>
             </tr>

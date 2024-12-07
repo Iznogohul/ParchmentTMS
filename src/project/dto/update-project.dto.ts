@@ -2,6 +2,7 @@ import { PartialType } from "@nestjs/mapped-types";
 import { CreateProjectDto } from "./create-project.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { Types } from "mongoose";
+import { IsArray, IsMongoId, IsOptional } from "class-validator";
 
 /**
  * DTO (Data Transfer Object) for updating an existing project.
@@ -46,6 +47,22 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
   description?: string;
 
   /**
+   * The ID of the user who owns the project.
+   *
+   * This field is optional. If provided, it must be a valid MongoDB ObjectId that represents a user.
+   * The `owner` field is typically set during project creation and is usually not updated.
+   *
+   * Example: '63e4e8d6e92f5e0b6f9a2f33'
+   *
+   * @example '63e4e8d6e92f5e0b6f9a2f33'
+   * @optional
+   * @type {Types.ObjectId}
+   */
+  @IsOptional()
+  @IsMongoId()
+  owner?: Types.ObjectId;
+
+  /**
    * List of user IDs who are members of the project.
    *
    * This field is optional. If provided, it must be an array of MongoDB ObjectIds that represent
@@ -62,4 +79,19 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
     required: false,
   })
   members?: Types.ObjectId[];
+
+  /**
+   * List of ticket IDs associated with the project.
+   *
+   * This field is optional. If provided, it must be an array of MongoDB ObjectIds that represent
+   * the tickets associated with the project.
+   *
+   * @example ['63e4e8d6e92f5e0b6f9a2f35', '63e4e8d6e92f5e0b6f9a2f36']
+   * @optional
+   * @type {Types.ObjectId[]}
+   */
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  tickets?: Types.ObjectId[];
 }

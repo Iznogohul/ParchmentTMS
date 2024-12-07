@@ -53,3 +53,10 @@ export class ProjectInsufficientPermissionsError extends ProjectError {}
  * @extends ProjectError
  */
 export class ProjectNotModifiedError extends ProjectError {}
+
+/**
+ * Error class for project provided update data being invalid.
+ * @class
+ * @extends ProjectError
+ */
+export class ProjectUpdateDataValidationError extends ProjectError {}
