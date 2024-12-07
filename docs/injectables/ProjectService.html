@@ -360,8 +360,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="176"
-                                    class="link-to-prism">src/project/project.service.ts:176</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">src/project/project.service.ts:186</a></div>
                         </td>
                     </tr>
 
@@ -879,10 +879,20 @@ export class ProjectService {
     if (!hasChanges(project, updateProjectDto)) {
       throw new ProjectNotModifiedError(&quot;No changes detected&quot;);
     }
+    const updateFields &#x3D; {};
+    for (const key in updateProjectDto) {
+      if (updateProjectDto.hasOwnProperty(key)) {
+        updateFields[key] &#x3D; updateProjectDto[key];
+      }
+    }
     const updatedProject &#x3D; await this.projectModel
-      .findByIdAndUpdate(projectId, updateProjectDto, {
-        new: true,
-      })
+      .findByIdAndUpdate(
+        projectId,
+        { $set: updateFields },
+        {
+          new: true,
+        },
+      )
       .populate({ path: &quot;owner&quot;, select: &quot;name -_id&quot; })
       .populate(&quot;members&quot;)
       .exec();
