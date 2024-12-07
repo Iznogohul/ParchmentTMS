@@ -1,0 +1,14 @@
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+
+  api:
+    build: .
+    ports:
+      - 3000:$PORT
+    environment:
+      - MONGODB_URI=mongodb://mongodb/test
+      - PORT=3000
+    depends_on:
+      - mongodb

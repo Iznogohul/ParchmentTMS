@@ -1,0 +1,7 @@
+{
+  "$schema": "./node_modules/@compodoc/compodoc/src/config/schema.json",
+  "tsconfig": "./tsconfig.build.json",
+  "name": "ParchmentTMS Documentation 📖",
+  "theme": "material",
+  "hideGenerator": true
+}
