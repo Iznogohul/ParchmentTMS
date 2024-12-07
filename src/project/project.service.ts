@@ -150,10 +150,20 @@ export class ProjectService {
     if (!hasChanges(project, updateProjectDto)) {
       throw new ProjectNotModifiedError("No changes detected");
     }
+    const updateFields = {};
+    for (const key in updateProjectDto) {
+      if (updateProjectDto.hasOwnProperty(key)) {
+        updateFields[key] = updateProjectDto[key];
+      }
+    }
     const updatedProject = await this.projectModel
-      .findByIdAndUpdate(projectId, updateProjectDto, {
-        new: true,
-      })
+      .findByIdAndUpdate(
+        projectId,
+        { $set: updateFields },
+        {
+          new: true,
+        },
+      )
       .populate({ path: "owner", select: "name -_id" })
       .populate("members")
       .exec();
