@@ -1,7 +1,14 @@
-import { ProjectDoesNotExist, ProjectIdValidationError, ProjectInsufficientPermissionsError, ProjectNotModifiedError, ProjectRelationConflict } from "@/project/project.errors";
-import { TicketDoesNotExist, TicketRelationConflict, TicketSlugValidationError } from "@/ticket/ticket.errors";
+import {
+  ProjectDoesNotExist,
+  ProjectIdValidationError,
+  ProjectInsufficientPermissionsError,
+  ProjectNotModifiedError,
+  ProjectRelationConflict,
+  ProjectUpdateDataValidationError,
+} from "@/project/project.errors";
+import { TicketDoesNotExist, TicketNotModifiedError, TicketRelationConflict, TicketSlugValidationError } from "@/ticket/ticket.errors";
 import { HttpException, HttpStatus } from "@nestjs/common";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 /**
  * Compares two arrays for deep equality.
@@ -70,7 +77,7 @@ export function hasChanges<T>(original: T, updated: Partial<T>): boolean {
  * const invalid = isMongoDbIdValid("invalid-id");
  * console.log(invalid); // false
  */
-export function isMongoDbIdValid(id: string): boolean {
+export function isMongoDbIdValid(id: string | Types.ObjectId): boolean {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
@@ -92,6 +99,8 @@ export function handleDomainErrors(error: unknown): never {
     throw new HttpException(error.message, HttpStatus.NOT_FOUND);
   } else if (error instanceof TicketSlugValidationError) {
     throw new HttpException(error.message, HttpStatus.UNPROCESSABLE_ENTITY);
+  } else if (error instanceof TicketNotModifiedError) {
+    throw new HttpException(error.message, HttpStatus.NOT_MODIFIED);
   }
 
   // Project Errors
@@ -99,7 +108,7 @@ export function handleDomainErrors(error: unknown): never {
     throw new HttpException(error.message, HttpStatus.NOT_FOUND);
   } else if (error instanceof ProjectInsufficientPermissionsError) {
     throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-  } else if (error instanceof ProjectIdValidationError) {
+  } else if (error instanceof ProjectIdValidationError || error instanceof ProjectUpdateDataValidationError) {
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   } else if (error instanceof ProjectRelationConflict) {
     throw new HttpException(error.message, HttpStatus.CONFLICT);

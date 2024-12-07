@@ -194,7 +194,7 @@ and permissions are respected during operations like creation and deletion.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/project/project.service.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/project/project.service.ts:30</a></div>
                             </td>
                         </tr>
 
@@ -260,8 +260,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="43"
-                                    class="link-to-prism">src/project/project.service.ts:43</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="44"
+                                    class="link-to-prism">src/project/project.service.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -360,8 +360,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="163"
-                                    class="link-to-prism">src/project/project.service.ts:163</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="176"
+                                    class="link-to-prism">src/project/project.service.ts:176</a></div>
                         </td>
                     </tr>
 
@@ -461,8 +461,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">src/project/project.service.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/project/project.service.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -543,8 +543,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="97"
-                                    class="link-to-prism">src/project/project.service.ts:97</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/project/project.service.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -643,8 +643,8 @@ and permissions are respected during operations like creation and deletion.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/project/project.service.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">src/project/project.service.ts:131</a></div>
                         </td>
                     </tr>
 
@@ -741,6 +741,7 @@ import {
   ProjectInsufficientPermissionsError,
   ProjectNotModifiedError,
   ProjectRelationConflict,
+  ProjectUpdateDataValidationError,
 } from &quot;./project.errors&quot;;
 import { plainToClass } from &quot;class-transformer&quot;;
 import { hasChanges, isMongoDbIdValid } from &quot;@/utils&quot;;
@@ -854,6 +855,7 @@ export class ProjectService {
    * @throws {ProjectIdValidationError} - If the provided project ID is invalid.
    * @throws {ProjectDoesNotExist} - If the project does not exist.
    * @throws {ProjectNotModifiedError} - If no changes were detected in the update.
+   * @throws {ProjectUpdateDataValidationError} - If update data were not valid according to db schema.
    */
   public async update(projectId: string, updateProjectDto: UpdateProjectDto): Promise&lt;Project&gt; {
     if (!isMongoDbIdValid(projectId)) {
@@ -862,6 +864,17 @@ export class ProjectService {
     const project &#x3D; await this.projectModel.findById(projectId).exec();
     if (!project) {
       throw new ProjectDoesNotExist(&#x60;Project with id \&quot;${projectId}\&quot; doesn&#x27;t exist.&#x60;);
+    }
+    const validUpdate &#x3D; new this.projectModel(updateProjectDto);
+    if (!validUpdate.owner) {
+      validUpdate.owner &#x3D; project.owner;
+    }
+    if (!validUpdate.createdBy) {
+      validUpdate.createdBy &#x3D; project.createdBy;
+    }
+    const validationError &#x3D; validUpdate.validateSync();
+    if (validationError) {
+      throw new ProjectUpdateDataValidationError(&quot;Invalid update data&quot;);
     }
     if (!hasChanges(project, updateProjectDto)) {
       throw new ProjectNotModifiedError(&quot;No changes detected&quot;);

@@ -12,6 +12,7 @@ import {
   ProjectInsufficientPermissionsError,
   ProjectNotModifiedError,
   ProjectRelationConflict,
+  ProjectUpdateDataValidationError,
 } from "./project.errors";
 import { plainToClass } from "class-transformer";
 import { hasChanges, isMongoDbIdValid } from "@/utils";
@@ -125,6 +126,7 @@ export class ProjectService {
    * @throws {ProjectIdValidationError} - If the provided project ID is invalid.
    * @throws {ProjectDoesNotExist} - If the project does not exist.
    * @throws {ProjectNotModifiedError} - If no changes were detected in the update.
+   * @throws {ProjectUpdateDataValidationError} - If update data were not valid according to db schema.
    */
   public async update(projectId: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
     if (!isMongoDbIdValid(projectId)) {
@@ -133,6 +135,17 @@ export class ProjectService {
     const project = await this.projectModel.findById(projectId).exec();
     if (!project) {
       throw new ProjectDoesNotExist(`Project with id \"${projectId}\" doesn't exist.`);
+    }
+    const validUpdate = new this.projectModel(updateProjectDto);
+    if (!validUpdate.owner) {
+      validUpdate.owner = project.owner;
+    }
+    if (!validUpdate.createdBy) {
+      validUpdate.createdBy = project.createdBy;
+    }
+    const validationError = validUpdate.validateSync();
+    if (validationError) {
+      throw new ProjectUpdateDataValidationError("Invalid update data");
     }
     if (!hasChanges(project, updateProjectDto)) {
       throw new ProjectNotModifiedError("No changes detected");

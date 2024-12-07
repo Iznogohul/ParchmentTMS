@@ -9,6 +9,7 @@ import { ProjectDoesNotExist, ProjectIdValidationError } from "@/project/project
 import { plainToClass } from "class-transformer";
 import { TicketDoesNotExist, TicketError, TicketIdValidationError, TicketInsufficientPermissionsError, TicketNotModifiedError } from "./ticket.errors";
 import { hasChanges, isMongoDbIdValid } from "@/utils";
+import { sanitizeUpdateTicketDto } from "./utils/ticket.utils";
 
 /**
  * Service class for managing ticket-related operations within projects.
@@ -28,8 +29,12 @@ export class TicketService {
    * @param {mongoose.Types.ObjectId} userId - The ID of the user creating the ticket.
    * @returns {Promise<Ticket>} - The created ticket object.
    * @throws {ProjectDoesNotExist} - Throws if the project with the provided ID doesn't exist.
+   * @throws {ProjectIdValidationError} - Throws if the provided project ID is invalid.
    */
   public async create(createTicketDto: CreateTicketDto, userId: mongoose.Types.ObjectId): Promise<Ticket> {
+    if (!isMongoDbIdValid(createTicketDto.projectId)) {
+      throw new ProjectIdValidationError(`Invalid project id: \"${createTicketDto.projectId}\"`);
+    }
     const project = await this.projectModel.findById(createTicketDto.projectId).exec();
     if (!project) {
       throw new ProjectDoesNotExist(`Project with id \"${createTicketDto.projectId}\" doesn't exist.`);
@@ -112,11 +117,16 @@ export class TicketService {
     if (!hasChanges(ticket, updateTicketDto)) {
       throw new TicketNotModifiedError("No changes detected");
     }
+    const sanitizedUpdate = sanitizeUpdateTicketDto(updateTicketDto);
     const updatedTicket = await this.ticketModel
-      .findByIdAndUpdate(ticketId, updateTicketDto, {
-        new: true,
-        runValidators: true,
-      })
+      .findByIdAndUpdate(
+        ticketId,
+        { $set: sanitizedUpdate },
+        {
+          new: true,
+          runValidators: true,
+        },
+      )
       .select("-__v")
       .exec();
     return updatedTicket;
