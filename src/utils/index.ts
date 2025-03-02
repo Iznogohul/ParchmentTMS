@@ -4,6 +4,7 @@ import {
   ProjectInsufficientPermissionsError,
   ProjectNotModifiedError,
   ProjectRelationConflict,
+  ProjectSlugValidationError,
   ProjectUpdateDataValidationError,
 } from "@/project/project.errors";
 import { TicketDoesNotExist, TicketNotModifiedError, TicketRelationConflict, TicketSlugValidationError } from "@/ticket/ticket.errors";
@@ -20,7 +21,7 @@ import mongoose, { Types } from "mongoose";
  * @param {T[]} arr2 - The second array to compare.
  * @returns {boolean} - Returns `true` if both arrays are equal, `false` otherwise.
  */
-export function deepEqualArrays<T>(arr1: T[], arr2: T[]): boolean {
+function deepEqualArrays<T>(arr1: T[], arr2: T[]): boolean {
   if (arr1.length !== arr2.length) return false;
 
   for (let i = 0; i < arr1.length; i++) {
@@ -108,7 +109,7 @@ export function handleDomainErrors(error: unknown): never {
     throw new HttpException(error.message, HttpStatus.NOT_FOUND);
   } else if (error instanceof ProjectInsufficientPermissionsError) {
     throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-  } else if (error instanceof ProjectIdValidationError || error instanceof ProjectUpdateDataValidationError) {
+  } else if (error instanceof ProjectIdValidationError || error instanceof ProjectUpdateDataValidationError || error instanceof ProjectSlugValidationError) {
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   } else if (error instanceof ProjectRelationConflict) {
     throw new HttpException(error.message, HttpStatus.CONFLICT);

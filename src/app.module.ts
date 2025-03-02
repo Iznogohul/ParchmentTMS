@@ -12,7 +12,6 @@ import { HealthModule } from "./health/health.module";
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGODB_URI), HealthModule, UserModule, TicketModule, ProjectModule],
-
   controllers: [AppController],
   providers: [AppService],
 })
