@@ -312,7 +312,6 @@ import { HealthModule } from &quot;./health/health.module&quot;;
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGODB_URI), HealthModule, UserModule, TicketModule, ProjectModule],
-
   controllers: [AppController],
   providers: [AppService],
 })

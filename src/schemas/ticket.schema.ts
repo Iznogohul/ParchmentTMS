@@ -1,14 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 import { User } from "./user.schema";
 import { Project } from "./project.schema";
-
-/**
- * TicketDocument type that combines the Ticket class with Mongoose Document.
- *
- * @extends Document
- */
-export type TicketDocument = Ticket & Document;
 
 /**
  * Ticket Schema represents the structure of a ticket in the database.
