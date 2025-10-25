@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { UserService } from "@/user/user.service";
 import { LoginUserDto } from "./dto/login-user.dto";
+
+import { UserService } from "@/user/user.service";
 
 /**
  * Service for handling user authentication, including login and token generation.

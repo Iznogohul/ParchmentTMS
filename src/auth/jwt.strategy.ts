@@ -1,8 +1,8 @@
-import { User } from "src/schemas/user.schema";
-import { UserService } from "src/user/user.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { User } from "src/schemas/user.schema";
+import { UserService } from "src/user/user.service";
 
 /**
  * Strategy for authenticating users using JSON Web Tokens (JWT).

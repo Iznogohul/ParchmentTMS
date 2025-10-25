@@ -1,9 +1,10 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateTicketDto } from "./create-ticket.dto";
-import { IsString, IsOptional, IsMongoId, IsArray, IsDate } from "class-validator";
-import { Types } from "mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsString, IsOptional, IsMongoId, IsArray, IsDate } from "class-validator";
+import { Types } from "mongoose";
+
+import { CreateTicketDto } from "./create-ticket.dto";
 
 /**
  * DTO (Data Transfer Object) for updating a ticket.

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { plainToClass } from "class-transformer";
 import mongoose, { Model } from "mongoose";
 
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
-import { Project, ProjectDocument } from "@/schemas/project.schema";
 import {
   ProjectDoesNotExist,
   ProjectError,
@@ -14,7 +14,8 @@ import {
   ProjectRelationConflict,
   ProjectUpdateDataValidationError,
 } from "./project.errors";
-import { plainToClass } from "class-transformer";
+
+import { Project, ProjectDocument } from "@/schemas/project.schema";
 import { hasChanges, isMongoDbIdValid } from "@/utils";
 
 /**

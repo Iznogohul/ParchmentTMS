@@ -1,8 +1,9 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateProjectDto } from "./create-project.dto";
 import { ApiProperty } from "@nestjs/swagger";
-import { Types } from "mongoose";
 import { IsArray, IsMongoId, IsOptional } from "class-validator";
+import { Types } from "mongoose";
+
+import { CreateProjectDto } from "./create-project.dto";
 
 /**
  * DTO (Data Transfer Object) for updating an existing project.

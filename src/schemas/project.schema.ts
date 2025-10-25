@@ -1,8 +1,9 @@
+import { forwardRef } from "@nestjs/common";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { User, UserDocument } from "./user.schema";
+
 import { Ticket } from "./ticket.schema";
-import { forwardRef } from "@nestjs/common";
+import { User, UserDocument } from "./user.schema";
 
 /**
  * ProjectDocument type that combines the Project class with Mongoose Document.

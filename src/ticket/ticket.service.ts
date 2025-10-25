@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { plainToClass } from "class-transformer";
 import mongoose, { Model } from "mongoose";
-import { Ticket } from "@/schemas/ticket.schema";
+
 import { CreateTicketDto } from "./dto/create-ticket.dto";
 import { UpdateTicketDto } from "./dto/update-ticket.dto";
-import { Project } from "@/schemas/project.schema";
-import { ProjectDoesNotExist, ProjectIdValidationError } from "@/project/project.errors";
-import { plainToClass } from "class-transformer";
 import { TicketDoesNotExist, TicketError, TicketIdValidationError, TicketInsufficientPermissionsError, TicketNotModifiedError } from "./ticket.errors";
-import { hasChanges, isMongoDbIdValid } from "@/utils";
 import { sanitizeUpdateTicketDto } from "./utils/ticket.utils";
+
+import { ProjectDoesNotExist, ProjectIdValidationError } from "@/project/project.errors";
+import { Project } from "@/schemas/project.schema";
+import { Ticket } from "@/schemas/ticket.schema";
+import { hasChanges, isMongoDbIdValid } from "@/utils";
 
 /**
  * Service class for managing ticket-related operations within projects.
