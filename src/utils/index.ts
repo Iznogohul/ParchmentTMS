@@ -1,3 +1,6 @@
+import { HttpException, HttpStatus } from "@nestjs/common";
+import mongoose, { Types } from "mongoose";
+
 import {
   ProjectDoesNotExist,
   ProjectIdValidationError,
@@ -8,8 +11,6 @@ import {
   ProjectUpdateDataValidationError,
 } from "@/project/project.errors";
 import { TicketDoesNotExist, TicketNotModifiedError, TicketRelationConflict, TicketSlugValidationError } from "@/ticket/ticket.errors";
-import { HttpException, HttpStatus } from "@nestjs/common";
-import mongoose, { Types } from "mongoose";
 
 /**
  * Compares two arrays for deep equality.

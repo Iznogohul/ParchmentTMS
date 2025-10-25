@@ -1,6 +1,6 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNotEmpty, IsOptional, IsArray, IsMongoId } from "class-validator";
 import { Types } from "mongoose";
-import { ApiProperty } from "@nestjs/swagger";
 
 /**
  * DTO for creating a ticket.

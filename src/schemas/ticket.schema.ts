@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
-import { User } from "./user.schema";
+
 import { Project } from "./project.schema";
+import { User } from "./user.schema";
 
 /**
  * Ticket Schema represents the structure of a ticket in the database.

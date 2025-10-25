@@ -1,9 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Request, UseGuards } from "@nestjs/common";
-import { TicketService } from "./ticket.service";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { CreateTicketDto } from "./dto/create-ticket.dto";
 import { UpdateTicketDto } from "./dto/update-ticket.dto";
 import { ExpressRequestWithUser } from "./interfaces/ticket.interface";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { TicketService } from "./ticket.service";
+
 import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
 import { Ticket } from "@/schemas/ticket.schema";
 import { handleDomainErrors } from "@/utils";

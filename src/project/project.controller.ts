@@ -1,11 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from "@nestjs/common";
-import { ProjectService } from "./project.service";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiParam, ApiTags } from "@nestjs/swagger";
+
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Project } from "@/schemas/project.schema";
-import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
 import { ExpressRequestWithUser } from "./interfaces/project.interface";
+import { ProjectService } from "./project.service";
+
+import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
+import { Project } from "@/schemas/project.schema";
 import { handleDomainErrors } from "@/utils";
 
 /**
